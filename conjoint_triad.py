@@ -1,3 +1,7 @@
+from decimal import *
+import csv
+
+
 # Generating vector space (7*7*7)
 def VS(rang):
     V = []
@@ -63,3 +67,12 @@ def freq_dict(V, freq):
         frequency_dictionary[key] = float("{0:.3f}".format(((frequency_dictionary[key] - fmin) / fmax)))
 
     return frequency_dictionary
+
+
+# Export the output to .csv file
+def output_to_csv(frequency_dict):
+    with open('conjoint_triad.csv', 'w') as csvfile:
+        conjointTriad = csv.DictWriter(csvfile, frequency_dict.keys())
+        conjointTriad.writeheader()
+        conjointTriad.writerow(frequency_dict)
+    print('Data was exported to "conjointTriad.csv."')
