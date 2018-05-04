@@ -1,5 +1,6 @@
 from decimal import *
 import csv
+from Bio import SeqIO
 
 
 # Generating vector space (7*7*7)
@@ -56,7 +57,7 @@ def freq_dict(V, freq):
     for i in range(0, len(V)):
         key = V[i]
         if(frequency_dictionary[key] > fmax):
-            fmax = frequency_dictionary[key]
+            fmax = freq
         if(frequency_dictionary[key] < fmin):
             fmin = frequency_dictionary[key]
 
@@ -76,3 +77,14 @@ def output_to_csv(frequency_dict):
         conjointTriad.writeheader()
         conjointTriad.writerow(frequency_dict)
     print('Data was exported to "conjointTriad.csv."')
+
+# Reading sequences from fasta file.
+def fasta_input():
+    print("Enter path of .fasta file : ", end='')
+    path = input()
+    sequences = []
+    for record in SeqIO.parse(path, "fasta"):
+        sequences.append(record.seq)
+    return sequences
+
+sequences = fasta_input()
