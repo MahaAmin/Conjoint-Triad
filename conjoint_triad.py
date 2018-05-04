@@ -32,3 +32,34 @@ def frequency(seq):
                 tmp += "7"
         frequency.append(tmp)
     return frequency
+
+
+# Creating frequency_dictionary, and calaculate frequency for eaech conjoint triad
+def freq_dict(V, freq):
+    frequency_dictionary = {}
+    for i in range(0, len(V)):
+        key = V[i]
+        frequency_dictionary[key] = 0
+
+    for i in range(0, len(freq)):
+        frequency_dictionary[freq[i]] = frequency_dictionary[freq[i]]+1
+
+    # Normalization
+
+    # Getting fmin & fmax
+    fmax = 0
+    fmin = 0
+    for i in range(0, len(V)):
+        key = V[i]
+        if(frequency_dictionary[key] > fmax):
+            fmax = frequency_dictionary[key]
+        if(frequency_dictionary[key] < fmin):
+            fmin = frequency_dictionary[key]
+
+    # di = (fi - fmin) / fmax
+    for i in range(0, len(V)):
+        key = V[i]
+        getcontext().prec = 3
+        frequency_dictionary[key] = float("{0:.3f}".format(((frequency_dictionary[key] - fmin) / fmax)))
+
+    return frequency_dictionary
