@@ -52,12 +52,12 @@ def freq_dict(V, freq):
     # Normalization
 
     # Getting fmin & fmax
-    fmax = 0
-    fmin = 0
+    fmax = int(0)
+    fmin = int(0)
     for i in range(0, len(V)):
         key = V[i]
         if(frequency_dictionary[key] > fmax):
-            fmax = freq
+            fmax = frequency_dictionary[key]
         if(frequency_dictionary[key] < fmin):
             fmin = frequency_dictionary[key]
 
@@ -72,11 +72,11 @@ def freq_dict(V, freq):
 
 # Export the output to .csv file
 def output_to_csv(frequency_dict):
-    with open('conjoint_triad.csv', 'w') as csvfile:
+    with open('conjoint_triad.csv', 'a') as csvfile:
         conjointTriad = csv.DictWriter(csvfile, frequency_dict.keys())
         conjointTriad.writeheader()
         conjointTriad.writerow(frequency_dict)
-    print('Data was exported to "conjointTriad.csv."')
+
 
 # Reading sequences from fasta file.
 def fasta_input():
@@ -87,4 +87,18 @@ def fasta_input():
         sequences.append(record.seq)
     return sequences
 
-sequences = fasta_input()
+def conjoint_triad():
+    # Truncating .csv file
+    filename = "conjoint_triad.csv"
+    f = open(filename, "w+")
+    f.close()
+    sequences = fasta_input()
+    v = VS(8)
+    for i in range(0, len(sequences)):
+        fi = frequency(sequences[i])
+        freqDict = freq_dict(v, fi)
+        output_to_csv(freqDict)
+    print('Data was exported to "conjoint_triad.csv."')
+
+
+conjoint_triad()
