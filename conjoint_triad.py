@@ -92,8 +92,11 @@ def conjoint_triad():
     filename = "conjoint_triad.csv"
     f = open(filename, "w+")
     f.close()
+    # reading input file
     sequences = fasta_input()
+    # Creating vector space
     v = VS(8)
+    # calculating conjoint_triad for each sequence
     for i in range(0, len(sequences)):
         fi = frequency(sequences[i])
         freqDict = freq_dict(v, fi)
