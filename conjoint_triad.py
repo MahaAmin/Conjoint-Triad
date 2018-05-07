@@ -106,7 +106,7 @@ def conjoint_triad():
     v = VS(8)
 
     #writing vector space as header in the csv file
-    header = [""]
+    header = ["ID"]
     for i in range(0, len(v)):
         header.append(v[i])
     with open(filename, "a") as headingcsv:
@@ -123,13 +123,3 @@ def conjoint_triad():
 
 conjoint_triad()
 
-# sequences = []
-# seq_IDs = []
-#
-# for record in SeqIO.parse("seq.fasta", "fasta"):
-#     sequences.append(record.seq)
-#     seq_IDs.append(record.id)
-#
-# with open('conjoint_triad.csv', 'a') as csvfile:
-#     write_csv = csv.writer(csvfile)
-#     write_csv.writecol(seq_IDs[i])
