@@ -52,30 +52,36 @@ def freq_dict(V, freq):
     # Normalization
 
     # Getting fmin & fmax
-    fmax = int(0)
-    fmin = int(0)
-    for i in range(0, len(V)):
-        key = V[i]
-        if(frequency_dictionary[key] > fmax):
-            fmax = frequency_dictionary[key]
-        if(frequency_dictionary[key] < fmin):
-            fmin = frequency_dictionary[key]
-
-    # di = (fi - fmin) / fmax
-    for i in range(0, len(V)):
-        key = V[i]
-        getcontext().prec = 3
-        frequency_dictionary[key] = float("{0:.3f}".format(((frequency_dictionary[key] - fmin) / fmax)))
+    # fmax = int(0)
+    # fmin = int(0)
+    # for i in range(0, len(V)):
+    #     key = V[i]
+    #     if(frequency_dictionary[key] > fmax):
+    #         fmax = frequency_dictionary[key]
+    #     if(frequency_dictionary[key] < fmin):
+    #         fmin = frequency_dictionary[key]
+    #
+    # # di = (fi - fmin) / fmax
+    # for i in range(0, len(V)):
+    #     key = V[i]
+    #     getcontext().prec = 3
+    #     frequency_dictionary[key] = float("{0:.3f}".format(((frequency_dictionary[key] - fmin) / fmax)))
 
     return frequency_dictionary
 
 
 # Export the output to .csv file
-def output_to_csv(frequency_dict):
+def output_to_csv(seq_ID, frequency_dict):
+
+    # Each row in csv file [ seqID, frequencies ]
+    data = [seq_ID]
+    for key, value in frequency_dict.items():
+        data.append(value)
+
     with open('conjoint_triad.csv', 'a') as csvfile:
-        conjointTriad = csv.DictWriter(csvfile, frequency_dict.keys())
-        conjointTriad.writeheader()
-        conjointTriad.writerow(frequency_dict)
+        conjointTriad = csv.writer(csvfile)
+        conjointTriad.writerow(data)
+
 
 
 # Reading sequences from fasta file.
@@ -83,9 +89,11 @@ def fasta_input():
     print("Enter path of .fasta file : ", end='')
     path = input()
     sequences = []
+    seq_IDs = []
     for record in SeqIO.parse(path, "fasta"):
         sequences.append(record.seq)
-    return sequences
+        seq_IDs.append(record.id)
+    return sequences, seq_IDs
 
 def conjoint_triad():
     # Truncating .csv file
@@ -93,15 +101,35 @@ def conjoint_triad():
     f = open(filename, "w+")
     f.close()
     # reading input file
-    sequences = fasta_input()
+    sequences, seq_IDs = fasta_input()
     # Creating vector space
     v = VS(8)
+
+    #writing vector space as header in the csv file
+    header = [""]
+    for i in range(0, len(v)):
+        header.append(v[i])
+    with open(filename, "a") as headingcsv:
+        headerwriter = csv.writer(headingcsv)
+        headerwriter.writerow(header)
+
     # calculating conjoint_triad for each sequence
     for i in range(0, len(sequences)):
         fi = frequency(sequences[i])
         freqDict = freq_dict(v, fi)
-        output_to_csv(freqDict)
+        output_to_csv(seq_IDs[i], freqDict)
     print('Data was exported to "conjoint_triad.csv."')
 
 
 conjoint_triad()
+
+# sequences = []
+# seq_IDs = []
+#
+# for record in SeqIO.parse("seq.fasta", "fasta"):
+#     sequences.append(record.seq)
+#     seq_IDs.append(record.id)
+#
+# with open('conjoint_triad.csv', 'a') as csvfile:
+#     write_csv = csv.writer(csvfile)
+#     write_csv.writecol(seq_IDs[i])
